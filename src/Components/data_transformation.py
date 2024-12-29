@@ -3,6 +3,7 @@ import sys
 from dataclasses import dataclass
 import numpy as np
 import pandas as pd
+from typing import Tuple, List
 
 from sklearn.compose import ColumnTransformer
 from sklearn.impute import SimpleImputer
@@ -75,7 +76,9 @@ class DataTransformation:
             logging.info(f"Error in data_transformation.py: {e}")
             raise CustomException(e, sys)
 
-    def initiate_data_transformation(self, train_path, test_path):
+    def initiate_data_transformation(
+        self, train_path: str, test_path: str
+    ) -> Tuple[List[float], List[float], str]:
         logging.info("Entered data transformation initialisation method")
         try:
             df_train = pd.read_csv(train_path)
@@ -88,7 +91,7 @@ class DataTransformation:
             pre_proc = self.get_data_transformer_object()
 
             target_column_name = "math_score"
-            numerical_columns = ["writing_score", "reading_score"]
+            # numerical_columns = ["writing_score", "reading_score"]
 
             df_input_feat_train = df_train.drop(columns=[target_column_name])
             df_target_feat_train = df_train[target_column_name]

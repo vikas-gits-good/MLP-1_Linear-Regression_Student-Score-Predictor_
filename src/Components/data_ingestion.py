@@ -5,10 +5,8 @@ from dataclasses import dataclass
 
 from src.exception import CustomException
 from src.logger import logging
-from src.Components.data_transformation import (
-    DataTransformation,
-    DataTransformationConfig,
-)
+from src.Components.data_transformation import DataTransformation
+from src.Components.model_trainer import ModelTrainer
 
 from sklearn.model_selection import train_test_split
 
@@ -73,8 +71,19 @@ class DataIngestion:
 
 
 if __name__ == "__main__":
+    # Data Ingestion
     obj = DataIngestion()
     train_path, test_path = obj.initiate_data_ingestion()
 
+    # Data Transformation
     data_transf = DataTransformation()
-    data_transf.initiate_data_transformation(train_path=train_path, test_path=test_path)
+    train_set, test_set, _ = data_transf.initiate_data_transformation(
+        train_path=train_path, test_path=test_path
+    )
+
+    # Model Trainer
+    mdl_trn = ModelTrainer()
+    r2_score, model_name = mdl_trn.initiate_model_trainer(
+        ary_train=train_set, ary_test=test_set
+    )
+    print(f"Best model is '{model_name}' with r2_score of {r2_score*100:.2f}%")
