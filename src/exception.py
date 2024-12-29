@@ -5,10 +5,8 @@ def error_msg_details(error, error_detail: sys):
     _, _, exc_tb = error_detail.exc_info()
     file_name = exc_tb.tb_frame.f_code.co_filename
     line_numb = exc_tb.tb_lineno
+    error_msg = f"Error occured in script: [{file_name}], line number: [{line_numb}], message: [{str(error)}]"
 
-    error_msg = f"Error occured in script: [{file_name}], line number: [{line_numb}], message: [{str(error)}]".format(
-        file_name
-    )
     return error_msg
 
 
