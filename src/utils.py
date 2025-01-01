@@ -1,14 +1,16 @@
 import os
 import sys
 import dill
-import numpy as np
-import pandas as pd
+
+# import numpy as np
+# import pandas as pd
 from typing import Tuple
 
 from src.logger import logging
 from src.exception import CustomException
 
 from sklearn.metrics import r2_score
+from sklearn.model_selection import GridSearchCV
 
 
 def save_object(file_path: str, obj):
@@ -33,7 +35,9 @@ def save_object(file_path: str, obj):
         raise CustomException(e, sys)
 
 
-def evaluate_model(X_train, Y_train, X_test, Y_test, Models) -> Tuple[dict, dict]:
+def evaluate_model(
+    X_train, Y_train, X_test, Y_test, Models, param
+) -> Tuple[dict, dict]:
     """Method that evaluates models and returns a dictionary of r2_scores
 
     Args:
@@ -47,6 +51,7 @@ def evaluate_model(X_train, Y_train, X_test, Y_test, Models) -> Tuple[dict, dict
             'Model-2 Name' : Model_2_Function(),
             'Model-3 Name' : Model_3_Function(),
             }
+        param dict(dict): Dict of parameters for each of the models
 
     Returns:
         (Model-Score_dict, Best-Model-Score-dict)
@@ -63,7 +68,13 @@ def evaluate_model(X_train, Y_train, X_test, Y_test, Models) -> Tuple[dict, dict
             logging.info(f'Started training "{model_name}" model')
 
             model = list(Models.values())[i]
-            model.fit(X_train, Y_train)  # Train model
+            para = param[model_name]
+
+            gs = GridSearchCV(model, para, cv=3)
+            gs.fit(X_train, Y_train)
+
+            model.set_params(**gs.best_params_)
+            model.fit(X_train, Y_train)
 
             # Make predictions
             y_train_pred = model.predict(X_train)
@@ -93,5 +104,5 @@ def evaluate_model(X_train, Y_train, X_test, Y_test, Models) -> Tuple[dict, dict
         return (Model_scores, Max_model)
 
     except Exception as e:
-        logging.info(f"Error occured in utils.py: {e}")
+        logging.info(f"Error in utils.py: {e}")
         raise CustomException(e, sys)
