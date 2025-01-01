@@ -106,3 +106,23 @@ def evaluate_model(
     except Exception as e:
         logging.info(f"Error in utils.py: {e}")
         raise CustomException(e, sys)
+
+
+def load_object(file_path):
+    """Method to load a given file when called to a variable
+
+    Args:
+        file_path (str): Path location to the requested file
+
+    Raises:
+        CustomException: Error while opening requested file
+
+    Returns:
+        object: Item that is called
+    """
+    try:
+        with open(file_path, "rb") as file_obj:
+            return dill.load(file_obj)
+    except Exception as e:
+        logging.info(f"Error in utils.py: {e}")
+        raise CustomException(e, sys)

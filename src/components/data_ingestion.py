@@ -5,8 +5,8 @@ from dataclasses import dataclass
 
 from src.exception import CustomException
 from src.logger import logging
-from src.Components.data_transformation import DataTransformation
-from src.Components.model_trainer import ModelTrainer
+from src.components.data_transformation import DataTransformation
+from src.components.model_trainer import ModelTrainer
 
 from sklearn.model_selection import train_test_split
 
